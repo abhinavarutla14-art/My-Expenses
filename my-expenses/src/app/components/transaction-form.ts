@@ -41,19 +41,20 @@ import { CalendarPicker } from './calendar-picker';
         </div>
 
         <div class="field">
-          <label class="field-label">SOURCE / CATEGORY</label>
-          <div class="category-row">
-            <button
-              *ngFor="let category of categoryOptions"
-              type="button"
-              class="category-chip"
-              [class.active]="form.get('category')?.value === category"
-              (click)="selectCategory(category)">
-              {{ category }}
-            </button>
+          <label class="field-label">DESCRIPTION</label>
+          <div class="input-with-icon">
+            <input
+              name="customDescription"
+              class="text-input"
+              type="text"
+              placeholder="Type a description like Movie ticket or Recharge"
+              [value]="form.get('category')?.value || ''"
+              (input)="updateCustomCategory($any($event.target).value)"
+            />
           </div>
+          <div class="field-hint">Enter any description you want for this transaction.</div>
           <div class="error" *ngIf="form.get('category')?.invalid && form.get('category')?.touched">
-            <small *ngIf="form.get('category')?.errors?.['required']">Category is required.</small>
+            <small *ngIf="form.get('category')?.errors?.['required']">Description is required.</small>
           </div>
         </div>
 
@@ -169,9 +170,6 @@ export class TransactionForm implements OnInit {
   activeMonthWarning = '';
   datePickerOpen = false;
 
-  incomeCategories = ['Salary', 'Freelance', 'Bonus', 'Gift', 'Investment'];
-  expenseCategories = ['Groceries', 'Dining', 'Utilities', 'Transport', 'Entertainment'];
-
   constructor(
     private fb: FormBuilder,
     private transactionService: TransactionService,
@@ -179,10 +177,6 @@ export class TransactionForm implements OnInit {
     private route: ActivatedRoute
   ) {
     this.initializeForm();
-  }
-
-  get categoryOptions(): string[] {
-    return this.type === 'income' ? this.incomeCategories : this.expenseCategories;
   }
 
   get pageTitle(): string {
@@ -242,8 +236,9 @@ export class TransactionForm implements OnInit {
     this.form.patchValue({ type, category: '' });
   }
 
-  selectCategory(category: string) {
-    this.form.patchValue({ category });
+  updateCustomCategory(value: string) {
+    const normalizedValue = value.trim();
+    this.form.patchValue({ category: normalizedValue });
     this.form.get('category')?.markAsTouched();
   }
 
