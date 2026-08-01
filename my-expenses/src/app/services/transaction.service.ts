@@ -47,6 +47,10 @@ export class TransactionService {
     return this.data.find((t) => t.id === id);
   }
 
+  getByRecurringId(recurringId: string, date: string): Transaction | undefined {
+    return this.data.find((t) => t.recurringId === recurringId && t.date === date);
+  }
+
   add(tx: Omit<Transaction, 'id'>) {
     const id = String(Date.now());
     const item: Transaction = { id, ...tx };

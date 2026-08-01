@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Transaction } from '../models/transaction';
 import { TransactionService } from './transaction.service';
 
 export interface EmiItem {
@@ -47,18 +48,44 @@ export class RecurringService {
   ensureRecurringTransactions(transactionService: TransactionService, targetMonth?: string): boolean {
     const monthKey = targetMonth ?? this.monthKey(new Date());
     const appliedMonths = Array.isArray(this.settings.appliedMonths) ? this.settings.appliedMonths : [];
-    if (appliedMonths.includes(monthKey)) {
-      return false;
-    }
-
+    const alreadyApplied = appliedMonths.includes(monthKey);
+    console.log('[RecurringService] ensureRecurringTransactions monthKey=', monthKey, 'alreadyApplied=', alreadyApplied, 'salary=', this.settings.salary, 'emiCount=', this.settings.emiItems.length);
     const [year, month] = monthKey.split('-').map(Number);
-    const currentDate = new Date(year, month - 1, 1);
     const lastDay = new Date(year, month, 0).getDate();
+    let changed = false;
+
+    const formatLocalDate = (year: number, monthIndex: number, day: number): string => {
+      const monthString = String(monthIndex + 1).padStart(2, '0');
+      const dayString = String(day).padStart(2, '0');
+      return `${year}-${monthString}-${dayString}`;
+    };
+
+    const addOrUpdate = (tx: Omit<Transaction, 'id'>) => {
+      const existing = transactionService.getByRecurringId(tx.recurringId ?? '', tx.date);
+      if (!existing) {
+        transactionService.add(tx);
+        changed = true;
+        return;
+      }
+      if (
+        existing.amount !== tx.amount ||
+        existing.type !== tx.type ||
+        existing.category !== tx.category ||
+        existing.note !== tx.note
+      ) {
+        transactionService.update(existing.id, {
+          amount: tx.amount,
+          type: tx.type,
+          category: tx.category,
+          note: tx.note,
+        });
+        changed = true;
+      }
+    };
 
     if (this.settings.salary > 0) {
-      const salaryDate = new Date(year, month - 1, 1);
-      const salaryDateString = salaryDate.toISOString().slice(0, 10);
-      transactionService.add({
+      const salaryDateString = formatLocalDate(year, month - 1, 1);
+      addOrUpdate({
         amount: this.settings.salary,
         type: 'income',
         category: 'Salary',
@@ -73,10 +100,9 @@ export class RecurringService {
       .forEach((item) => {
         const dueDate = new Date(item.dueDate);
         const day = isNaN(dueDate.getDate()) ? 1 : Math.min(dueDate.getDate(), lastDay);
-        const recurringDate = new Date(year, month - 1, day);
-        const recurringDateString = recurringDate.toISOString().slice(0, 10);
+        const recurringDateString = formatLocalDate(year, month - 1, day);
 
-        transactionService.add({
+        addOrUpdate({
           amount: item.amount,
           type: 'expense',
           category: item.name || 'Recurring EMI',
@@ -86,9 +112,21 @@ export class RecurringService {
         });
       });
 
-    this.settings.appliedMonths = [...appliedMonths, monthKey];
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(this.settings));
-    return true;
+    if (!alreadyApplied) {
+      this.settings.appliedMonths = [...appliedMonths, monthKey];
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.settings));
+      console.log('[RecurringService] created recurring entries for', monthKey);
+      return true;
+    }
+
+    if (changed) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.settings));
+      console.log('[RecurringService] updated recurring entries for', monthKey);
+      return true;
+    }
+
+    console.log('[RecurringService] no changes needed for', monthKey);
+    return false;
   }
 
   private load(): void {

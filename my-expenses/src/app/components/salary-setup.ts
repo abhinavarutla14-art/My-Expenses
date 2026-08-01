@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { RecurringService, RecurringSettings, EmiItem } from '../services/recurring.service';
+import { TransactionService } from '../services/transaction.service';
 
 @Component({
   standalone: true,
@@ -493,7 +494,7 @@ export class SalarySetupPage implements OnInit {
     { id: 'emi-2', name: 'Car Loan', amount: 350, dueDate: new Date().toISOString().slice(0, 10) },
   ];
 
-  constructor(private recurringService: RecurringService) {}
+  constructor(private recurringService: RecurringService, private transactionService: TransactionService) {}
 
   ngOnInit(): void {
     this.loadSettings();
@@ -521,6 +522,10 @@ export class SalarySetupPage implements OnInit {
       appliedMonths: currentSettings.appliedMonths,
     };
     this.recurringService.saveSettings(settings);
+    const activeMonth = this.transactionService.getActiveMonth();
+    if (activeMonth) {
+      this.transactionService.applyRecurringTransactions(activeMonth);
+    }
     alert('Settings saved');
   }
 

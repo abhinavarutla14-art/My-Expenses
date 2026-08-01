@@ -21,7 +21,7 @@ import { CommonModule } from '@angular/common';
 
         <!-- Month/Year Navigation -->
         <div class="month-nav-row">
-          <button class="nav-btn" (click)="prevMonth()" type="button">
+          <button class="nav-btn" [disabled]="isPrevMonthDisabled()" (click)="prevMonth()" type="button">
             <span class="material-symbols-outlined">chevron_left</span>
           </button>
           <div class="year-display">
@@ -163,7 +163,7 @@ import { CommonModule } from '@angular/common';
       border: none;
       background: transparent;
       cursor: pointer;
-      transition: background-color 0.2s ease;
+      transition: background-color 0.2s ease, opacity 0.2s ease;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -171,6 +171,12 @@ import { CommonModule } from '@angular/common';
 
     .nav-btn:hover {
       background-color: #e8e8ea;
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      background: transparent;
     }
 
     .nav-btn .material-symbols-outlined {
@@ -371,7 +377,15 @@ export class CalendarPicker implements OnInit {
   }
 
   prevMonth(): void {
-    this.selectedDate = new Date(this.selectedDate.getFullYear(), this.selectedDate.getMonth() - 1, 1);
+    const today = new Date();
+    const currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const previousMonth = new Date(this.selectedDate.getFullYear(), this.selectedDate.getMonth() - 1, 1);
+
+    if (previousMonth < currentMonth) {
+      return;
+    }
+
+    this.selectedDate = previousMonth;
     this.generateCalendar();
   }
 
@@ -385,6 +399,13 @@ export class CalendarPicker implements OnInit {
     const month = this.selectedDate.getMonth();
     const date = new Date(year, month, day);
     this.tempSelectedDate = date.toISOString().slice(0, 10);
+  }
+
+  isPrevMonthDisabled(): boolean {
+    const today = new Date();
+    const currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const previousMonth = new Date(this.selectedDate.getFullYear(), this.selectedDate.getMonth() - 1, 1);
+    return previousMonth < currentMonth;
   }
 
   isToday(day: number): boolean {

@@ -613,8 +613,37 @@ export class DashboardPage implements OnInit {
     if (!dateValue) {
       return;
     }
-    this.selectedMonth = dateValue.slice(0, 7);
+
+    const selectedMonth = dateValue.slice(0, 7);
+    const currentMonth = new Date().toISOString().slice(0, 7);
+
+    if (selectedMonth < currentMonth) {
+      alert('Past months cannot be selected.');
+      return;
+    }
+
+    if (selectedMonth > currentMonth) {
+      const confirmed = confirm(
+        'You are selecting a future month. You can\'t go back to this month again. Continue?'
+      );
+      if (!confirmed) {
+        return;
+      }
+    }
+
+    this.selectedMonth = selectedMonth;
+    console.log('[Dashboard] Selected month:', this.selectedMonth);
+    const applied = this.transactionService.applyRecurringTransactions(this.selectedMonth);
+    console.log('[Dashboard] Recurring applied result:', applied, 'for', this.selectedMonth);
+    this.transactionService.setActiveMonth(this.selectedMonth);
+    this.activeMonth = this.selectedMonth;
     this.closeMonthPicker();
+    this.loadDashboardData(this.selectedMonth);
+    this.loadRecurringSummary();
+    this.recurringStatus = applied
+      ? `Month ${this.selectedMonth} started.`
+      : `Month ${this.selectedMonth} is already applied.`;
+    setTimeout(() => (this.recurringStatus = ''), 4000);
   }
 
   ngOnInit(): void {
@@ -623,7 +652,7 @@ export class DashboardPage implements OnInit {
       this.selectedMonth = this.activeMonth;
     }
     this.transactionService.applyRecurringTransactions(this.selectedMonth);
-    this.loadDashboardData();
+    this.loadDashboardData(this.selectedMonth);
     this.loadRecurringSummary();
   }
 
@@ -631,7 +660,7 @@ export class DashboardPage implements OnInit {
     const applied = this.transactionService.applyRecurringTransactions(this.selectedMonth);
     this.transactionService.setActiveMonth(this.selectedMonth);
     this.activeMonth = this.selectedMonth;
-    this.loadDashboardData();
+    this.loadDashboardData(this.selectedMonth);
     this.loadRecurringSummary();
     this.recurringStatus = applied
       ? `Month ${this.selectedMonth} started.`
@@ -639,13 +668,22 @@ export class DashboardPage implements OnInit {
     setTimeout(() => (this.recurringStatus = ''), 4000);
   }
 
-  private loadDashboardData(): void {
+  private loadDashboardData(month?: string): void {
+    if (month) {
+      const applied = this.transactionService.applyRecurringTransactions(month);
+      if (applied) {
+        this.transactionService.setActiveMonth(month);
+        this.activeMonth = month;
+      }
+    }
+
     const all = this.transactionService.getAll();
-    this.recentTransactions = all.slice(0, 4);
-    this.income = all
+    const filtered = month ? all.filter((tx) => tx.date.slice(0, 7) === month) : all;
+    this.recentTransactions = filtered.slice(0, 4);
+    this.income = filtered
       .filter((tx) => tx.type === 'income')
       .reduce((sum, tx) => sum + tx.amount, 0);
-    this.expense = all
+    this.expense = filtered
       .filter((tx) => tx.type === 'expense')
       .reduce((sum, tx) => sum + tx.amount, 0);
     this.totalBalance = this.income - this.expense;
