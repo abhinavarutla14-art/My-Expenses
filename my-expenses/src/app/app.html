@@ -1,0 +1,52 @@
+﻿<style>
+  :host {
+    display: block;
+    min-height: 100vh;
+    background: #f8fafc;
+  }
+
+  .app-container {
+    min-height: 100vh;
+    background: transparent;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+
+  .app-main {
+    min-height: 100vh;
+  }
+
+  .toolbar {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 1rem;
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .toolbar-button {
+    border: none;
+    border-radius: 999px;
+    padding: 0.75rem 1rem;
+    background: #003ec7;
+    color: white;
+    cursor: pointer;
+    font-weight: 700;
+  }
+
+  .toolbar-button:hover {
+    background: #002bb5;
+  }
+</style>
+
+<div class="app-container">
+  <div class="toolbar">
+    <button type="button" class="toolbar-button" (click)="exportData()">Export backup</button>
+    <button type="button" class="toolbar-button" (click)="triggerImport()">Import backup</button>
+    <input id="import-file" type="file" accept="application/json" hidden (change)="onFileSelected($event)" />
+  </div>
+  <main class="app-main">
+    <router-outlet></router-outlet>
+  </main>
+</div>
