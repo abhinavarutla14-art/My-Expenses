@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1785581230383,
+  "timestamp": 1785582019157,
   "index": "/My-Expenses/index.html",
   "assetGroups": [
     {
@@ -13,7 +13,7 @@
       "urls": [
         "/My-Expenses/favicon.ico",
         "/My-Expenses/index.html",
-        "/My-Expenses/main-BSWUBYA3.js",
+        "/My-Expenses/main-KNR3ATST.js",
         "/My-Expenses/manifest.webmanifest",
         "/My-Expenses/styles-GJH6WUY7.css"
       ],
@@ -50,8 +50,8 @@
     "/My-Expenses/icons/icon-512x512.png": "1de182f76f7329dfa8f9fcdd1fdcdd695bea6a99",
     "/My-Expenses/icons/icon-72x72.png": "aa88a6096bd973be7f6d7a5489bfa6bc2463f8c4",
     "/My-Expenses/icons/icon-96x96.png": "7fb8f59c30ce2ff12c700321a0b39e14b3dc8f95",
-    "/My-Expenses/index.html": "7b94b22b0c4de0b13a0ce8e31d1fd40653362c13",
-    "/My-Expenses/main-BSWUBYA3.js": "94f80c39ea1e77e164cb6588190b2e9f596426bf",
+    "/My-Expenses/index.html": "e8e8d6d266b8205d2b51ddc698e3bd30c85692c0",
+    "/My-Expenses/main-KNR3ATST.js": "a869d9644393daf277001f10f4b1d01a9930e081",
     "/My-Expenses/manifest.webmanifest": "4855822b3b4e75d27b1ba5e4d8e29dd7f5f4964a",
     "/My-Expenses/styles-GJH6WUY7.css": "1d29a17a131a66cb07382c8dd633f5837c3ee162"
   },
