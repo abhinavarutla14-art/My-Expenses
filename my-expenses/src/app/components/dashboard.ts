@@ -185,9 +185,6 @@ import { CalendarPicker } from './calendar-picker';
         background: #ffffff;
         border-radius: 1rem;
         box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
-        position: sticky;
-        top: 0;
-        z-index: 20;
       }
 
       .top-app-bar__start {
@@ -530,9 +527,9 @@ import { CalendarPicker } from './calendar-picker';
       .fab-button {
         position: fixed;
         right: 1.25rem;
-        bottom: 5.5rem;
-        width: 3.5rem;
-        height: 3.5rem;
+        bottom: 7rem;
+        width: 3.75rem;
+        height: 3.75rem;
         border-radius: 9999px;
         border: none;
         background: #003ec7;
@@ -541,10 +538,12 @@ import { CalendarPicker } from './calendar-picker';
         place-items: center;
         box-shadow: 0 16px 32px rgba(0, 62, 199, 0.24);
         cursor: pointer;
+        z-index: 30;
       }
 
       .fab-icon {
-        font-size: 1.5rem;
+        font-size: 1.75rem;
+        line-height: 1;
       }
 
       .bottom-nav {
