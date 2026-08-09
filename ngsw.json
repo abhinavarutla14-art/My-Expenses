@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1786255506542,
+  "timestamp": 1786256227002,
   "index": "/My-Expenses/index.html",
   "assetGroups": [
     {
@@ -13,7 +13,7 @@
       "urls": [
         "/My-Expenses/favicon.ico",
         "/My-Expenses/index.html",
-        "/My-Expenses/main-FO7JNK7E.js",
+        "/My-Expenses/main-LXCZQ2LD.js",
         "/My-Expenses/manifest.webmanifest",
         "/My-Expenses/styles-GJH6WUY7.css"
       ],
@@ -50,8 +50,8 @@
     "/My-Expenses/icons/icon-512x512.png": "a6afc0ece085397d3871258d13feca46b0ee7e41",
     "/My-Expenses/icons/icon-72x72.png": "b442a34bac8dbb427702403f9f3c4a1c3a4dc072",
     "/My-Expenses/icons/icon-96x96.png": "501b2b26275d99cb7527669b63247894ac7bd8cc",
-    "/My-Expenses/index.html": "c5e19ab334810c5f7045562fea2f798520138f96",
-    "/My-Expenses/main-FO7JNK7E.js": "75469a4e3030cd82ac5589508af72eff40f2a62d",
+    "/My-Expenses/index.html": "6865e1c46632c16fd3efa22759fe8c1e5e99bd2a",
+    "/My-Expenses/main-LXCZQ2LD.js": "b5a12a8dac5a013b2e7bbcb607cffbd228b412f2",
     "/My-Expenses/manifest.webmanifest": "4855822b3b4e75d27b1ba5e4d8e29dd7f5f4964a",
     "/My-Expenses/styles-GJH6WUY7.css": "1d29a17a131a66cb07382c8dd633f5837c3ee162"
   },
