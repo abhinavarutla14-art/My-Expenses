@@ -657,7 +657,7 @@ export class DashboardPage implements OnInit {
   }
 
   protected applyRecurringForNewMonth(): void {
-    const applied = this.transactionService.applyRecurringTransactions(this.selectedMonth); 
+    const applied = this.transactionService.applyRecurringTransactions(this.selectedMonth);
     this.transactionService.setActiveMonth(this.selectedMonth);
     this.activeMonth = this.selectedMonth;
     this.loadDashboardData(this.selectedMonth);
