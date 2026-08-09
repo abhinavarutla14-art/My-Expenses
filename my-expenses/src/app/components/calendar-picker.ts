@@ -345,19 +345,31 @@ export class CalendarPicker implements OnInit {
   dayLabels = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
   tempSelectedDate: string = '';
 
+  private parseDateValue(value: string): Date {
+    const [year, month, day] = value.split('-').map(Number);
+    return new Date(year, month - 1, day);
+  }
+
+  private formatDateValue(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
   ngOnInit() {
     if (this.selectedDateValue) {
-      this.selectedDate = new Date(this.selectedDateValue);
+      this.selectedDate = this.parseDateValue(this.selectedDateValue);
       this.tempSelectedDate = this.selectedDateValue;
     } else {
-      this.tempSelectedDate = this.selectedDate.toISOString().slice(0, 10);
+      this.tempSelectedDate = this.formatDateValue(this.selectedDate);
     }
     this.generateCalendar();
   }
 
   ngOnChanges() {
     if (this.selectedDateValue) {
-      this.selectedDate = new Date(this.selectedDateValue);
+      this.selectedDate = this.parseDateValue(this.selectedDateValue);
       this.tempSelectedDate = this.selectedDateValue;
     }
     this.generateCalendar();
@@ -398,7 +410,7 @@ export class CalendarPicker implements OnInit {
     const year = this.selectedDate.getFullYear();
     const month = this.selectedDate.getMonth();
     const date = new Date(year, month, day);
-    this.tempSelectedDate = date.toISOString().slice(0, 10);
+    this.tempSelectedDate = this.formatDateValue(date);
   }
 
   isPrevMonthDisabled(): boolean {
